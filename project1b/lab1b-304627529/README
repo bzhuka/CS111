@@ -1,0 +1,15 @@
+Bradley Zhu - 304627529
+
+My project contains server.c, client.c, Makefile, my.key, and README.
+
+My two C source modules compile cleanly to executables client and server.  My
+client acts like a shell, but all it does is send things to the server.  My
+server has two threads and a forked process and sends things to the forked
+process that is running /bin/bash using the two threads like project 1a.
+
+My Makefile has a make option, can make the executables individually, can
+make clean, and can make dist.
+
+My key is just random characters.
+
+My README is this.

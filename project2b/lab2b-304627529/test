@@ -1,0 +1,59 @@
+#!/bin/bash
+
+	threads1=(1 2 4 8 12)
+	threads2=(1 2 4 8 12 16 24)
+	threads3=(1 2 4 8 16 24)
+	threads4=(1 4 8 12 16)
+	iterations1=(1 2 4 8 16)
+	iterations2=(10 20 40 80)
+	lists1=(1 4 8 16)
+		
+	> pic12.csv
+#plotting throughput rather than the time per operation
+for i in "${threads1[@]}"
+do
+	./lab2_add --threads=$i --iterations=10000 --sync=m >> pic12.csv
+	./lab2_add --threads=$i --iterations=10000 --sync=s >> pic12.csv
+done
+for i in "${threads2[@]}"
+do
+	./lab2_list --threads=$i --iterations=1000 --sync=m >> pic12.csv
+	./lab2_list --threads=$i --iterations=1000 --sync=s >> pic12.csv
+done
+
+#wait-for-lock time/average time per operation vs number of threads
+#for i in "${threads3[@]}"
+#do
+#	./lab2_list --threads=$i --iterations=1000 --sync=m >>lab_2b_list.csv
+#done
+
+> lab_2b_list.csv
+
+#--yield=id 4 lists 1 4 8 12 16 threads 1 2 4 8 16 iterations
+for i in "${threads4[@]}"
+do
+	for j in "${iterations1[@]}"
+	do
+		./lab2_list --threads=$i --iterations=$j --yield=id --lists=4 >> lab_2b_list.csv
+	done
+done
+
+#same as before but different iterations and syncing now
+for i in "${threads4[@]}"
+do
+	for j in "${iterations2[@]}"
+	do
+		./lab2_list --threads=$i --iterations=$j --yield=id --lists=4 --sync=m >> lab_2b_list.csv
+		./lab2_list --threads=$i --iterations=$j --yield=id --lists=4 --sync=s >> lab_2b_list.csv
+	done
+done
+
+#graph throughput vs number of threads
+for i in "${threads1[@]}"
+do
+	for j in "${lists1[@]}"
+	do
+		./lab2_list --threads=$i --iterations=1000 --lists=$j --sync=s >> lab_2b_list.csv
+		./lab2_list --threads=$i --iterations=1000 --lists=$j --sync=m >> lab_2b_list.csv
+	done
+done

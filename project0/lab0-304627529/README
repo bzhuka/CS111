@@ -1,0 +1,38 @@
+My project contains a C source module that compiles cleanly, a Makefile to
+build the program and tarball, a README file that describes the project and
+smoketest, and 2 screen snapshots from gdb (one showing a segfault and one
+showing a breakpoint).
+
+My program has no limitations that I'm aware of, and it copies its standard
+input to its standard output.  It accepts four command line arguments:
+input, output, segfault, and catch. I used the man pages to help me create
+my program.
+
+My makefile has a default, a check, a clean, and a dist.  The default just
+builds "lab0" from "lab0.c" using gcc.  My clean just removes "lab0".  My dist
+builds a tar.gz out of the files we have to submit.
+
+My smoketest-
+	My first test is just putting text in a file and using it as an input
+	with an output file that doesn't exist.
+	My second test is using the same input file into an output file that
+	already exists.  My program just overwrites the output file.
+	My third test is making the input file blank and seeing if the output
+	file becomes blank too.
+	My fourth test tests cases where the input file doesn't exist by making
+	sure my program returns 1.
+	My fifth test tests that segfault and catch work while also including
+	the input and output commands.
+	My sixth test tests segfault and catch by themselves.  I assume that it
+	should return 3.
+	My seventh test makes sure my program behaves correctly when it cannot
+	modify the output file.  I do this by making sure it returns 2.
+	My eigth test makes sure nothing unusual happens when I use catch
+	without using segfault.
+	My ninth test makes sure that my program works with a larger file
+	as input. I do this by generating a file of 5000 bytes which is
+	larger than my buffer size.
+
+Ambiguities
+	The specs didn't specify what to do when input, output, and segfault
+	are all used.  I create an empty file of the output.

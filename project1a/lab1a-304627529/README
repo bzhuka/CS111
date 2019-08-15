@@ -1,0 +1,33 @@
+I include 3 files - my C source file, a Makefile, and a README.
+
+My C source file contains the code to basically launch a shell.  First it
+sets itself into character-at-a-time full duplex terminal I/O.  Then if the
+shell argument is used, it will fork to create a new process that execs a
+shell (/bin/bash).  It creates two pipes to let the terminal and shell
+communicate.
+
+I tested the noncanonical input mode with no echo by just typing.  At first
+I had it where nothing would show until I pressed enter, but I figured out
+that it was a problem with my buffer.  Now it works where every character I
+press is inputted but special editing characters are ignored.  I used
+the gnu library and drew heavily from their example.
+
+I tested that the fork, shell, and pipes work by just using commands and looking
+at the output and making sure that it is correct.  Examples include "ls" and
+"cd".
+
+I tested that the return codes are correct by using the command "echo $?"
+and making sure the output is correct while doing the special cases:
+recieving an EOF from the terminal, recieving an EOF from the shell.
+
+For recieving a SIGPIPE from the shell I used the command "kill -s SIGPIPE 0"
+and made sure it worked correctly
+
+For printing the shell's exit status I tested it by just making sure that
+the exit status printed.
+
+My makefile just has a make, clean, and a dist command.
+
+I put a pthread_lock on my exit function so I'm not sure whether that could
+create bugs but I couldn't find any with that there.  That's the only
+limitation I'm aware of.

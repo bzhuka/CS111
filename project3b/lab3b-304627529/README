@@ -1,0 +1,17 @@
+My uid is 304627529
+
+The shell command to execute my program is "python lab3b.py".
+
+My source code is in lab3b.py.
+
+My Makefile has:
+	run - It just executes "python lab3b.py" which produces lab3b_check.txt.
+	check - It was used by me to test my txt file. It compares it with the sample.
+	clean - It deletes lab3b_check.txt
+	dist - It creates a tarball with the source code, Makefile, and README
+
+My README is this file, it contains my uid, shell command to execute my program, and
+a description of everything inside my tarball.
+
+As far as I know of, my program has no limitations, but I didn't get to test double
+and triple indirect blocks. 

@@ -1,0 +1,113 @@
+#!/bin/bash
+
+	threads=(2 4 8 12)
+	threads2=(1 2 4 8 12)
+	threads3=(1 2 4 8 12 16 24)
+	iterations1=(100 1000 10000 100000)
+	iterations2=(10 20 40 80 100 1000 10000 100000)
+	iterations3=(10 100 1000 10000 20000)
+	iterations4=(10 100 1000)
+	iterations5=(2 4 8 12 32)
+
+	> lab2_add.csv
+#range of threads and iterations for failure
+	for i in "${threads[@]}"
+	do
+	for j in "${iterations1[@]}"
+	do
+	./lab2_add --threads=$i --iterations=$j >> lab2_add.csv
+	done
+	done
+
+#range of threads and iterations for failure with yield
+	for i in "${threads[@]}"
+	do
+	for j in "${iterations2[@]}"
+	do
+	./lab2_add --threads=$i --iterations=$j --yield >> lab2_add.csv
+	done
+	done
+
+#average execution time of yield and non-yield for (2,8) theads
+	for j in "${iterations2[@]}"
+	do
+	./lab2_add --threads=2 --iterations=$j >> lab2_add.csv
+	./lab2_add --threads=8 --iterations=$j >> lab2_add.csv
+        ./lab2_add --threads=2 --iterations=$j --yield >> lab2_add.csv
+        ./lab2_add --threads=8 --iterations=$j --yield >> lab2_add.csv
+	done
+
+#average cost per operation (non-yield) as a function of number of iterators
+	for j in "${iterations1[@]}"
+	do
+	./lab2_add --threads=1 --iterations=$j >> lab2_add.csv
+	done
+
+#large number of threads and iterations with yield and spin locks
+	for i in "${threads[@]}"
+	do
+	./lab2_add --threads=$i --iterations=10000 --sync=m --yield >>lab2_add.csv
+	./lab2_add --threads=$i --iterations=10000 --sync=c --yield >>lab2_add.csv
+	./lab2_add --threads=$i --iterations=1000 --sync=s --yield >>lab2_add.csv
+	done
+
+#large iterations test no yield versions for large number of threads
+	for i in "${threads2[@]}"
+	do
+	./lab2_add --threads=$i --iterations=10000 >>lab2_add.csv
+	./lab2_add --threads=$i --iterations=10000 --sync=m >> lab2_add.csv
+	./lab2_add --threads=$i --iterations=10000 --sync=s >> lab2_add.csv
+	./lab2_add --threads=$i --iterations=10000 --sync=c >> lab2_add.csv
+	done
+
+	> lab2_list.csv
+#single thread large number of iterators
+	for j in "${iterations3[@]}"
+	do
+	./lab2_list --threads=1 --iterations=$j >> lab2_list.csv
+	done
+
+#parallel threads iterations to find problem
+	for i in "${threads[@]}"
+	do
+	for j in "${iterations4[@]}"
+	do
+	./lab2_list --threads=$i --iterations=$j >> lab2_list.csv
+	done
+	done
+
+#yield options
+	for i in "${threads[@]}"
+	do
+	for j in "${iterations5[@]}"
+	do
+	./lab2_list --threads=$i --iterations=$j --yield=i >> lab2_list.csv
+	./lab2_list --threads=$i --iterations=$j --yield=d >> lab2_list.csv
+	./lab2_list --threads=$i --iterations=$j --yield=il >> lab2_list.csv
+	./lab2_list --threads=$i --iterations=$j --yield=dl >> lab2_list.csv
+	done
+	done
+
+#yield options with sync
+	for i in "${threads[@]}"
+	do
+	for j in "${iterations5[@]}"
+	do
+	./lab2_list --threads=$i --iterations=$j --yield=i --sync=m >> lab2_list.csv
+	./lab2_list --threads=$i --iterations=$j --yield=d --sync=m >> lab2_list.csv
+	./lab2_list --threads=$i --iterations=$j --yield=il --sync=m >> lab2_list.csv
+	./lab2_list --threads=$i --iterations=$j --yield=dl --sync=m >> lab2_list.csv
+	./lab2_list --threads=$i --iterations=$j --yield=i --sync=s >> lab2_list.csv
+	./lab2_list --threads=$i --iterations=$j --yield=d --sync=s>> lab2_list.csv
+	./lab2_list --threads=$i --iterations=$j --yield=il --sync=s>> lab2_list.csv
+	./lab2_list --threads=$i --iterations=$j --yield=dl --sync=s>> lab2_list.csv        
+	done
+	done
+
+#1000 iterations lots of threads protected
+	./lab2_list --threads=1 --iterations=1000 >> lab2_list.csv
+	for i in "${threads3[@]}"
+	do
+	./lab2_list --threads=$i --iterations=1000 --sync=m >> lab2_list.csv
+	./lab2_list --threads=$i --iterations=1000 --sync=s >> lab2_list.csv
+	done
